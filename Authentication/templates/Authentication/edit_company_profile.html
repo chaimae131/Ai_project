@@ -1,0 +1,349 @@
+{% extends 'Authentication/company_dash_base.html' %}
+{% load static %}
+
+{% block title %}Modifier le profil entreprise | Entreprise{% endblock %}
+{% block header_title %}Modifier le profil entreprise{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center text-sm text-gray-500 mb-4">
+        <a href="{% url 'company_dashboard' %}" class="hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Tableau de bord
+        </a>
+        <span class="mx-2">/</span>
+        <span class="text-gray-700">Modifier le profil entreprise</span>
+    </nav>
+
+    <!-- Profile Form -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900">Informations de l'entreprise</h3>
+            <p class="text-sm text-gray-600 mt-1">Mettez à jour les informations de votre entreprise pour attirer les meilleurs talents.</p>
+        </div>
+        
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+                    <p class="font-medium">Veuillez corriger les erreurs suivantes :</p>
+                    <ul class="list-disc pl-5 mt-2">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }} : {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Company Logo -->
+                    <div class="col-span-2 flex flex-col items-center">
+                        <div class="w-32 h-32 rounded-full overflow-hidden bg-gray-200 mb-4 border-4 border-blue-100 shadow-md">
+                            {% if request.user.photo %}
+                                <img src="{{ request.user.photo.url }}" alt="Logo de l'entreprise" class="w-full h-full object-cover" id="profile-preview">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-blue-50" id="profile-placeholder">
+                                    <i class="fas fa-building text-blue-300 text-4xl"></i>
+                                </div>
+                                <img src="/placeholder.svg" alt="" class="w-full h-full object-cover hidden" id="profile-preview">
+                            {% endif %}
+                        </div>
+                        <div class="photo-preview"></div>
+                        <label for="{{ form.photo.id_for_label }}" class="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">
+                            <i class="fas fa-camera mr-2"></i> Changer le logo
+                        </label>
+                        <input type="file" id="{{ form.photo.id_for_label }}" name="{{ form.photo.name }}" accept="image/*" class="hidden">
+                        {% if form.photo.help_text %}
+                            <p class="text-xs text-gray-500 mt-2">{{ form.photo.help_text }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Form Fields -->
+                    <div class="col-span-2">
+                        <label for="{{ form.company_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nom de l'entreprise
+                            {% if form.company_name.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <input type="text" 
+                               name="{{ form.company_name.name }}" 
+                               id="{{ form.company_name.id_for_label }}" 
+                               value="{{ form.company_name.value|default_if_none:'' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               {% if form.company_name.field.required %}required{% endif %}>
+                    </div>
+                    
+                    <div class="col-span-2">
+                        <label for="{{ form.bio.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Description de l'entreprise
+                            {% if form.bio.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <textarea 
+                            name="{{ form.bio.name }}" 
+                            id="{{ form.bio.id_for_label }}" 
+                            rows="4"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {% if form.bio.field.required %}required{% endif %}>{{ form.bio.value|default_if_none:'' }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Téléphone
+                            {% if form.phone_number.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <input type="tel" 
+                               name="{{ form.phone_number.name }}" 
+                               id="{{ form.phone_number.id_for_label }}" 
+                               value="{{ form.phone_number.value|default_if_none:'' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               {% if form.phone_number.field.required %}required{% endif %}>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Adresse
+                            {% if form.address.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <input type="text" 
+                               name="{{ form.address.name }}" 
+                               id="{{ form.address.id_for_label }}" 
+                               value="{{ form.address.value|default_if_none:'' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               {% if form.address.field.required %}required{% endif %}>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.domain_of_work.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Secteur d'activité
+                            {% if form.domain_of_work.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <select 
+                            name="{{ form.domain_of_work.name }}" 
+                            id="{{ form.domain_of_work.id_for_label }}" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {% if form.domain_of_work.field.required %}required{% endif %}>
+                            <option value="">Sélectionnez un secteur d'activité</option>
+                            <option value="Technologie" {% if form.domain_of_work.value == 'Technologie' %}selected{% endif %}>Technologie</option>
+                            <option value="Finance" {% if form.domain_of_work.value == 'Finance' %}selected{% endif %}>Finance</option>
+                            <option value="Santé" {% if form.domain_of_work.value == 'Santé' %}selected{% endif %}>Santé</option>
+                            <option value="Éducation" {% if form.domain_of_work.value == 'Éducation' %}selected{% endif %}>Éducation</option>
+                            <option value="Commerce" {% if form.domain_of_work.value == 'Commerce' %}selected{% endif %}>Commerce</option>
+                            <option value="Industrie" {% if form.domain_of_work.value == 'Industrie' %}selected{% endif %}>Industrie</option>
+                            <option value="Services" {% if form.domain_of_work.value == 'Services' %}selected{% endif %}>Services</option>
+                            <option value="Autre" {% if form.domain_of_work.value == 'Autre' %}selected{% endif %}>Autre</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.links.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            links
+                            {% if form.links.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <input type="url" 
+                               name="{{ form.links.name }}" 
+                               id="{{ form.links.id_for_label }}" 
+                               value="{{ form.links.value|default_if_none:'' }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               {% if form.links.field.required %}required{% endif %}>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.founded_year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Année de création
+                            {% if form.founded_year.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <input type="number" 
+                               name="{{ form.founded_year.name }}" 
+                               id="{{ form.founded_year.id_for_label }}" 
+                               value="{{ form.founded_year.value|default_if_none:'' }}"
+                               min="1900" 
+                               max="{% now 'Y' %}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               {% if form.founded_year.field.required %}required{% endif %}>
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.company_size.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Taille de l'entreprise
+                            {% if form.company_size.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+                        <select 
+                            name="{{ form.company_size.name }}" 
+                            id="{{ form.company_size.id_for_label }}" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            {% if form.company_size.field.required %}required{% endif %}>
+                            <option value="">Sélectionnez la taille de l'entreprise</option>
+                            <option value="1-10" {% if form.company_size.value == '1-10' %}selected{% endif %}>1-10 employés</option>
+                            <option value="11-50" {% if form.company_size.value == '11-50' %}selected{% endif %}>11-50 employés</option>
+                            <option value="51-200" {% if form.company_size.value == '51-200' %}selected{% endif %}>51-200 employés</option>
+                            <option value="201-500" {% if form.company_size.value == '201-500' %}selected{% endif %}>201-500 employés</option>
+                            <option value="501-1000" {% if form.company_size.value == '501-1000' %}selected{% endif %}>501-1000 employés</option>
+                            <option value="1001+" {% if form.company_size.value == '1001+' %}selected{% endif %}>Plus de 1000 employés</option>
+                        </select>
+                    </div>
+                    
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Nos Valeurs
+                        </label>
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md min-h-[100px]" id="benefits-container">
+                                {% if benefits %}
+                                    {% for benefit in benefits %}
+                                    <div class="benefit-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                        <span>{{ benefit.name }}</span>
+                                        <button type="button" class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none remove-benefit" data-benefit="{{ benefit.name }}">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="flex">
+                                <input type="text" id="benefit-input" placeholder="Ajouter une valeur..." class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button type="button" id="add-benefit-btn" class="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 transition-colors">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" name="benefits" id="benefits-field" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-8">
+                    <a href="{% url 'company_dashboard' %}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors mr-4">
+                        <i class="fas fa-times mr-2"></i> Annuler
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-save mr-2"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Photo preview
+        const photoInput = document.getElementById('{{ form.photo.id_for_label }}');
+        const profilePreview = document.getElementById('profile-preview');
+        const profilePlaceholder = document.getElementById('profile-placeholder');
+        
+        if (photoInput && profilePreview) {
+            photoInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePreview.src = e.target.result;
+                        profilePreview.classList.remove('hidden');
+                        if (profilePlaceholder) {
+                            profilePlaceholder.classList.add('hidden');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        // Benefits management
+        const benefitInput = document.getElementById('benefit-input');
+        const addBenefitBtn = document.getElementById('add-benefit-btn');
+        const benefitsContainer = document.getElementById('benefits-container');
+        const benefitsField = document.getElementById('benefits-field');
+        
+        if (benefitInput && addBenefitBtn && benefitsContainer && benefitsField) {
+            // Initialize benefits array from existing benefits
+            let benefits = [];
+            
+            // Get existing benefits from the container
+            const existingBenefits = benefitsContainer.querySelectorAll('.benefit-tag');
+            existingBenefits.forEach(function(benefitTag) {
+                const benefitName = benefitTag.querySelector('span').textContent;
+                benefits.push({ name: benefitName });
+            });
+            
+            // Update the hidden field with the initial benefits
+            updateBenefitsField();
+            
+            // Function to update benefits field
+            function updateBenefitsField() {
+                benefitsField.value = JSON.stringify(benefits);
+            }
+            
+            // Function to add a benefit
+            function addBenefit(benefitName) {
+                if (!benefitName) return;
+                
+                // Check if benefit already exists
+                if (benefits.some(benefit => benefit.name.toLowerCase() === benefitName.toLowerCase())) {
+                    return;
+                }
+                
+                // Add benefit to array
+                benefits.push({ name: benefitName });
+                updateBenefitsField();
+                
+                // Add benefit tag to container
+                const benefitTag = document.createElement('div');
+                benefitTag.className = 'benefit-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center';
+                benefitTag.innerHTML = `
+                    <span>${benefitName}</span>
+                    <button type="button" class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none remove-benefit" data-benefit="${benefitName}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                benefitsContainer.appendChild(benefitTag);
+                
+                // Clear input
+                benefitInput.value = '';
+            }
+            
+            // Add benefit on button click
+            addBenefitBtn.addEventListener('click', function() {
+                addBenefit(benefitInput.value.trim());
+            });
+            
+            // Add benefit on Enter key
+            benefitInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addBenefit(this.value.trim());
+                }
+            });
+            
+            // Remove benefit on click
+            benefitsContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-benefit') || e.target.parentElement.classList.contains('remove-benefit')) {
+                    const button = e.target.classList.contains('remove-benefit') ? e.target : e.target.parentElement;
+                    const benefitName = button.getAttribute('data-benefit');
+                    
+                    // Remove benefit from array
+                    benefits = benefits.filter(benefit => benefit.name !== benefitName);
+                    updateBenefitsField();
+                    
+                    // Remove benefit tag from container
+                    const benefitTag = button.closest('.benefit-tag');
+                    if (benefitTag) {
+                        benefitTag.remove();
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

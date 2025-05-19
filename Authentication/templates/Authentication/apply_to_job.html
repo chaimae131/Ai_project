@@ -1,0 +1,26 @@
+{% extends 'Authentication/company_dash_base.html' %}
+{% load static %}
+
+{% block title %}Mon Tableau de Bord | Candidat{% endblock %}
+{% block header_title %}Tableau de Bord{% endblock %}
+
+{% block content %}
+    <h2>Postuler à l'offre : {{ job.title }}</h2>
+    
+    {% if request.user.role == 'candidate' %}
+        <p><strong>Entreprise :</strong> {{ job.company.company_name }}</p>
+        <p><strong>Description :</strong> {{ job.description }}</p>
+        
+        {% if form %}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Postuler</button>
+            </form>
+        {% else %}
+            <p>Vous avez déjà postulé à cette offre.</p>
+        {% endif %}
+    {% else %}
+        <p>Vous devez être un candidat pour postuler.</p>
+    {% endif %}
+{% endblock %}

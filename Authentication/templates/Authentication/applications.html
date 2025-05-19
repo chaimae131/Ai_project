@@ -1,0 +1,245 @@
+{% extends 'Authentication/company_dash_base.html' %}
+{% load static %}
+
+{% block title %}Mes Candidatures | Candidat{% endblock %}
+{% block header_title %}Mes Candidatures{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Applications Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 stat-card">
+            <div class="flex items-center">
+                <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-blue-100">
+                    <i class="fas fa-file-alt text-blue-500 text-lg"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total</p>
+                    <div class="text-2xl font-bold text-gray-900">
+                        {{ total_applications|default:"0" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 stat-card">
+            <div class="flex items-center">
+                <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-yellow-100">
+                    <i class="fas fa-hourglass-half text-yellow-500 text-lg"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">En attente</p>
+                    <div class="text-2xl font-bold text-gray-900">
+                        {{ pending_applications|default:"0" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 stat-card">
+            <div class="flex items-center">
+                <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-green-100">
+                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Acceptées</p>
+                    <div class="text-2xl font-bold text-gray-900">
+                        {{ accepted_applications|default:"0" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white shadow-md rounded-xl p-6 border border-gray-100 stat-card">
+            <div class="flex items-center">
+                <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full bg-red-100">
+                    <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Refusées</p>
+                    <div class="text-2xl font-bold text-gray-900">
+                        {{ rejected_applications|default:"0" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Applications List -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900">Mes candidatures</h3>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">Filtrer par:</span>
+                    <select id="status-filter" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="all">Tous les statuts</option>
+                        <option value="pending">En attente</option>
+                        <option value="interview">Entretien</option>
+                        <option value="accepted">Acceptée</option>
+                        <option value="rejected">Refusée</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divide-y divide-gray-200">
+            {% for application in applications %}
+            <div class="p-6 hover:bg-gray-50 transition-colors application-item" data-status="{{ application.status }}">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 flex items-center justify-center flex-shrink-0">
+                            {% if application.job.company.logo %}
+                            <img src="{{ application.job.company.logo.url }}" alt="{{ application.job.company.name }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <i class="fas fa-building text-gray-500"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900">{{ application.job.title }}</h4>
+                            <p class="text-sm text-gray-600">{{ application.job.company.name }} • {{ application.job.location }}</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="inline-flex items-center text-xs text-gray-500">
+                                    <i class="fas fa-calendar-alt mr-1"></i> Postulé le {{ application.created_at|date:"d/m/Y" }}
+                                </span>
+                                <span class="inline-flex items-center text-xs px-2 py-1 rounded-full 
+                                    {% if application.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif application.status == 'interview' %}bg-blue-100 text-blue-800
+                                    {% elif application.status == 'accepted' %}bg-green-100 text-green-800
+                                    {% elif application.status == 'rejected' %}bg-red-100 text-red-800
+                                    {% endif %}">
+                                    {% if application.status == 'pending' %}
+                                    <i class="fas fa-hourglass-half mr-1"></i> En attente
+                                    {% elif application.status == 'interview' %}
+                                    <i class="fas fa-video mr-1"></i> Entretien
+                                    {% elif application.status == 'accepted' %}
+                                    <i class="fas fa-check-circle mr-1"></i> Acceptée
+                                    {% elif application.status == 'rejected' %}
+                                    <i class="fas fa-times-circle mr-1"></i> Refusée
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center mt-4 md:mt-0">
+                        <div class="relative w-12 h-12 mr-4">
+                            <svg viewBox="0 0 36 36" class="w-full h-full">
+                                <path class="stroke-current text-gray-200" fill="none" stroke-width="3" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="stroke-current text-green-500" fill="none" stroke-width="3" stroke-dasharray="{{ application.match_percentage }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="text-xs font-bold" text-anchor="middle" fill="#4B5563">{{ application.match_percentage }}%</text>
+                            </svg>
+                        </div>
+                        <a href="{% url 'application_detail' application.id %}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">Voir détails</a>
+                    </div>
+                </div>
+                
+                {% if application.status == 'interview' %}
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                        <p class="text-sm text-blue-800">Votre entretien est prévu le {{ application.interview_date|date:"d/m/Y à H:i" }}</p>
+                    </div>
+                    <div class="mt-2 flex space-x-2">
+                        <a href="{% url 'prepare_interview' application.id %}" class="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-xs">Se préparer</a>
+                        <a href="{% url 'join_interview' application.id %}" class="px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors text-xs">Rejoindre</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if application.feedback %}
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h5 class="text-sm font-medium text-gray-900 mb-1">Feedback du recruteur:</h5>
+                    <p class="text-sm text-gray-600">{{ application.feedback }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-file-alt text-gray-400 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune candidature</h3>
+                <p class="text-gray-600 mb-4">Vous n'avez pas encore postulé à des offres d'emploi.</p>
+                <a href="{% url 'company_jobs' %}" class="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">
+                    <i class="fas fa-search mr-2"></i> Découvrir des offres
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if applications.has_other_pages %}
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-center">
+                <div class="text-sm text-gray-700">
+                    Affichage de <span class="font-medium">{{ applications.start_index }}</span> à <span class="font-medium">{{ applications.end_index }}</span> sur <span class="font-medium">{{ applications.paginator.count }}</span> candidatures
+                </div>
+                <div class="flex space-x-1">
+                    {% if applications.has_previous %}
+                    <a href="?page={{ applications.previous_page_number }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Précédent</a>
+                    {% else %}
+                    <span class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-500 cursor-not-allowed">Précédent</span>
+                    {% endif %}
+                    
+                    {% for i in applications.paginator.page_range %}
+                        {% if applications.number == i %}
+                        <span class="px-3 py-1 bg-blue-500 border border-blue-500 rounded-md text-sm text-white">{{ i }}</span>
+                        {% else %}
+                        <a href="?page={{ i }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if applications.has_next %}
+                    <a href="?page={{ applications.next_page_number }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Suivant</a>
+                    {% else %}
+                    <span class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-500 cursor-not-allowed">Suivant</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation pour les scores circulaires
+        const circleElements = document.querySelectorAll('svg path.text-green-500');
+        circleElements.forEach(function(circle) {
+            const length = circle.getTotalLength();
+            circle.style.transition = 'none';
+            circle.style.strokeDasharray = length + ' ' + length;
+            circle.style.strokeDashoffset = length;
+            
+            // Force reflow
+            circle.getBoundingClientRect();
+            
+            circle.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
+            circle.style.strokeDashoffset = '0';
+        });
+        
+        // Filtrage des candidatures par statut
+        const statusFilter = document.getElementById('status-filter');
+        const applicationItems = document.querySelectorAll('.application-item');
+        
+        if (statusFilter) {
+            statusFilter.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                
+                applicationItems.forEach(function(item) {
+                    const itemStatus = item.getAttribute('data-status');
+                    
+                    if (selectedStatus === 'all' || selectedStatus === itemStatus) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

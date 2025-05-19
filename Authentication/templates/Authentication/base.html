@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RemoteInterview{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    {% if messages %}
+    <div class="container mx-auto px-4 py-2">
+        {% for message in messages %}
+        <div class="{% if message.tags == 'success' %}bg-green-100 border border-green-200 text-green-700{% elif message.tags == 'error' %}bg-red-100 border border-red-200 text-red-700{% else %}bg-blue-100 border border-blue-200 text-blue-700{% endif %} px-4 py-3 rounded-md mb-4">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <script>
+        // JavaScript commun
+            document.addEventListener('DOMContentLoaded', function() {
+                // 1. Gestion des messages flash (disparition automatique après 5 secondes)
+                const messages = document.querySelectorAll('.bg-green-100, .bg-red-100, .bg-blue-100');
+                messages.forEach(function(message) {
+                    setTimeout(function() {
+                        message.style.transition = 'opacity 1s ease';
+                        message.style.opacity = '0';
+                        setTimeout(function() {
+                            message.remove();
+                        }, 1000);
+                    }, 5000);
+                });
+
+                // 2. Gestion du menu mobile
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                const mobileMenu = document.getElementById('mobile-menu');
+                
+                if (mobileMenuButton && mobileMenu) {
+                    mobileMenuButton.addEventListener('click', function() {
+                        mobileMenu.classList.toggle('hidden');
+                    });
+                }
+
+                // 3. Validation des formulaires côté client
+                const forms = document.querySelectorAll('form');
+                forms.forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        const requiredFields = form.querySelectorAll('[required]');
+                        let isValid = true;
+                        
+                        requiredFields.forEach(function(field) {
+                            if (!field.value.trim()) {
+                                isValid = false;
+                                // Ajouter une classe d'erreur
+                                field.classList.add('border-red-500');
+                                
+                                // Créer un message d'erreur s'il n'existe pas déjà
+                                let errorMessage = field.parentNode.querySelector('.error-message');
+                                if (!errorMessage) {
+                                    errorMessage = document.createElement('p');
+                                    errorMessage.className = 'text-red-500 text-xs mt-1 error-message';
+                                    errorMessage.textContent = 'Ce champ est requis';
+                                    field.parentNode.appendChild(errorMessage);
+                                }
+                            } else {
+                                // Supprimer la classe d'erreur et le message
+                                field.classList.remove('border-red-500');
+                                const errorMessage = field.parentNode.querySelector('.error-message');
+                                if (errorMessage) {
+                                    errorMessage.remove();
+                                }
+                            }
+                        });
+                        
+                        // Validation de l'email
+                        const emailFields = form.querySelectorAll('input[type="email"]');
+                        emailFields.forEach(function(field) {
+                            if (field.value.trim() && !isValidEmail(field.value)) {
+                                isValid = false;
+                                field.classList.add('border-red-500');
+                                
+                                let errorMessage = field.parentNode.querySelector('.error-message');
+                                if (!errorMessage) {
+                                    errorMessage = document.createElement('p');
+                                    errorMessage.className = 'text-red-500 text-xs mt-1 error-message';
+                                    errorMessage.textContent = 'Veuillez entrer une adresse email valide';
+                                    field.parentNode.appendChild(errorMessage);
+                                } else {
+                                    errorMessage.textContent = 'Veuillez entrer une adresse email valide';
+                                }
+                            }
+                        });
+                        
+                        // Validation des mots de passe (s'ils correspondent)
+                        const password1 = form.querySelector('input[name="password1"]');
+                        const password2 = form.querySelector('input[name="password2"]');
+                        
+                        if (password1 && password2 && password1.value !== password2.value) {
+                            isValid = false;
+                            password2.classList.add('border-red-500');
+                            
+                            let errorMessage = password2.parentNode.querySelector('.error-message');
+                            if (!errorMessage) {
+                                errorMessage = document.createElement('p');
+                                errorMessage.className = 'text-red-500 text-xs mt-1 error-message';
+                                errorMessage.textContent = 'Les mots de passe ne correspondent pas';
+                                password2.parentNode.appendChild(errorMessage);
+                            } else {
+                                errorMessage.textContent = 'Les mots de passe ne correspondent pas';
+                            }
+                        }
+                        
+                        if (!isValid) {
+                            event.preventDefault();
+                        }
+                    });
+                    
+                    // Réinitialiser les erreurs lors de la saisie
+                    const formFields = form.querySelectorAll('input, textarea, select');
+                    formFields.forEach(function(field) {
+                        field.addEventListener('input', function() {
+                            field.classList.remove('border-red-500');
+                            const errorMessage = field.parentNode.querySelector('.error-message');
+                            if (errorMessage) {
+                                errorMessage.remove();
+                            }
+                        });
+                    });
+                });
+
+                // 4. Fonctions utilitaires
+                function isValidEmail(email) {
+                    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return re.test(email);
+                }
+                
+                // 5. Prévisualisation des images téléchargées
+                const photoInputs = document.querySelectorAll('input[type="file"][accept*="image"]');
+                photoInputs.forEach(function(input) {
+                    input.addEventListener('change', function(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                // Chercher un conteneur de prévisualisation à proximité
+                                const previewContainer = document.querySelector('.photo-preview');
+                                if (previewContainer) {
+                                    // S'il existe déjà une image, la remplacer
+                                    let previewImg = previewContainer.querySelector('img');
+                                    if (!previewImg) {
+                                        previewImg = document.createElement('img');
+                                        previewImg.className = 'w-32 h-32 object-cover rounded-full mx-auto';
+                                        previewContainer.appendChild(previewImg);
+                                    }
+                                    previewImg.src = e.target.result;
+                                }
+                            };
+                            
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                });
+            });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

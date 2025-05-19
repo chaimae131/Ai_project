@@ -1,0 +1,154 @@
+{% extends 'Authentication/base.html' %}
+{% load static %}
+
+{% block title %}RemoteInterview - Entretiens à distance{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col relative">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{% static 'images/background.jpg' %}'); filter: brightness(0.4);"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-gray-900/70 to-gray-900/90"></div>
+    </div>
+    
+    <!-- Header -->
+    <header class="relative z-10 container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span class="text-2xl font-bold text-white">RemoteInterview</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'login' %}" class="px-4 py-2 rounded-md border border-white text-white hover:bg-white hover:text-gray-900 transition-colors">
+                    Connexion
+                </a>
+                <a href="{% url 'register_choice' %}" class="px-4 py-2 rounded-md bg-white text-gray-900 hover:bg-gray-200 transition-colors">
+                    Inscription
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-1 relative z-10">
+        <section class="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center justify-center text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-4xl mb-6">
+                Trouvez votre stage ou emploi et passez vos entretiens à distance
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl mb-10">
+                Notre plateforme vous permet de découvrir des opportunités professionnelles et de passer vos entretiens en
+                ligne, sans avoir à vous déplacer.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                <a href="{% url 'register_choice' %}" class="px-6 py-3 bg-white text-gray-900 rounded-md hover:bg-gray-200 transition-colors text-lg font-medium">
+                    Commencer maintenant
+                </a>
+                <a href="#features" class="px-6 py-3 border border-white text-white rounded-md hover:bg-white hover:text-gray-900 transition-colors text-lg font-medium">
+                    En savoir plus
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Features -->
+    <section id="features" class="relative z-10 bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Comment ça fonctionne</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Trouvez des opportunités</h3>
+                    <p class="text-gray-600">
+                        Parcourez notre base de données d'offres de stage et d'emploi mises à jour quotidiennement.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Postulez en ligne</h3>
+                    <p class="text-gray-600">
+                        Envoyez votre candidature directement via notre plateforme et suivez son avancement.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl text-center">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Entretien à distance</h3>
+                    <p class="text-gray-600">Passez vos entretiens en visioconférence sans avoir à vous déplacer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid gap-8 md:grid-cols-3">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">RemoteInterview</h3>
+                    <p class="text-gray-300">
+                        La plateforme qui révolutionne le processus de recrutement en le rendant plus accessible et efficace.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">À propos</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Contact</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Confidentialité</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Nous contacter</h3>
+                    <p class="text-gray-300">contact@remoteinterview.fr</p>
+                    <p class="text-gray-300">+33 1 23 45 67 89</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
+                <p>© {% now "Y" %} RemoteInterview. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

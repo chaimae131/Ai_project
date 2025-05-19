@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RemoteInterview{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+    <style>
+        /* Ajout des styles personnalisés de la première version */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s infinite;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+        }
+        
+        .sidebar-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .stat-card:hover, .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header revisité -->
+    
+
+    <!-- Main Content revisité -->
+    <div class="flex-grow flex">
+        <!-- Sidebar style première version -->
+        <aside id="sidebar" class="hidden md:flex flex-col w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-xl">
+            <div class="flex items-center justify-center h-16 border-b border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                    <span class="text-xl font-bold">RemoteInterview</span>
+                </div>
+            </div>
+            
+            <div class="px-4 py-6 h-full flex flex-col">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="w-20 h-20 rounded-full overflow-hidden mb-3 bg-gray-700 border-2 border-blue-400 shadow-lg">
+                        {% if candidate.photo %}
+                            <img src="{{ candidate.photo.url }}" alt="{{ candidate.user.first_name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-user text-gray-400 text-2xl"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h2 class="text-lg font-semibold">{{ candidate.user.first_name }} {{ candidate.user.last_name }}</h2>
+                    <p class="text-sm text-gray-400">{{ candidate.headline|default:"Complétez votre profil" }}</p>
+                </div>
+                
+                <nav class="flex-1 overflow-y-auto">
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="{% url 'candidate_dashboard' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'candidate_dashboard' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-home w-5 h-5 mr-3"></i>
+                                <span>Vue d'ensemble</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'company_jobs' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'company_jobs' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-briefcase w-5 h-5 mr-3"></i>
+                                <span>Offres d'emploi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'applications' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'applications' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
+                                <span>Mes candidatures</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'interview_management' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'interview_management' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-video w-5 h-5 mr-3"></i>
+                                <span>Entretiens</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'edit_candidate_profile' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'edit_candidate_profile' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-user-edit w-5 h-5 mr-3"></i>
+                                <span>Mon profil</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="flex-1 overflow-auto">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                    {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                        <div class="{% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-blue-100 text-blue-700{% endif %} px-4 py-3 rounded-md flex justify-between items-center">
+                            <div>
+                                {{ message }}
+                            </div>
+                            <button class="message-close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Menu mobile style première version -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-800 text-white py-2 z-50">
+        <div class="flex justify-around">
+            <a href="{% url 'candidate_dashboard' %}" class="flex flex-col items-center text-xs p-2 {% if request.resolver_match.url_name == 'candidate_dashboard' %}text-blue-400{% endif %}">
+                <i class="fas fa-home text-lg mb-1"></i>
+                Accueil
+            </a>
+            <a href="{% url 'company_jobs' %}" class="flex flex-col items-center text-xs p-2 {% if request.resolver_match.url_name == 'company_jobs' %}text-blue-400{% endif %}">
+                <i class="fas fa-briefcase text-lg mb-1"></i>
+                Offres
+            </a>
+            <a href="{% url 'applications' %}" class="flex flex-col items-center text-xs p-2 {% if request.resolver_match.url_name == 'applications' %}text-blue-400{% endif %}">
+                <i class="fas fa-file-alt text-lg mb-1"></i>
+                Candidatures
+            </a>
+            <a href="{% url 'interview_management' %}" class="flex flex-col items-center text-xs p-2 {% if request.resolver_match.url_name == 'interview_management' %}text-blue-400{% endif %}">
+                <i class="fas fa-video text-lg mb-1"></i>
+                Entretiens
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Scripts combinés
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des menus
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenuDropdown = document.getElementById('user-menu-dropdown');
+            
+            if (userMenuButton && userMenuDropdown) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userMenuDropdown.classList.toggle('hidden');
+                });
+            }
+
+            // Fermeture des menus au clic externe
+            document.addEventListener('click', function() {
+                if (userMenuDropdown && !userMenuDropdown.classList.contains('hidden')) {
+                    userMenuDropdown.classList.add('hidden');
+                }
+            });
+
+            // Gestion des messages
+            document.querySelectorAll('.message-close').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.parentElement.remove();
+                });
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

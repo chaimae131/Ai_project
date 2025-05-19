@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRecruit - Recrutement Innovant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Général */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Barre de navigation */
+        nav {
+            background: #ffffff;
+            color: #2d3748;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        nav ul li a {
+            color: #2d3748;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background: #667eea;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        nav ul li a:hover {
+            color: #667eea;
+        }
+
+        .signup-button {
+            background: #667eea;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .signup-button:hover {
+            background: #764ba2;
+            transform: translateY(-3px);
+        }
+
+        /* En-tête */
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 180px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 4.5rem;
+            margin: 0;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header p {
+            font-size: 1.6rem;
+            margin: 20px 0 0;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/always-grey.png');
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        /* Sections */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+
+        .presentation, .team, .services, .contact {
+            margin: 120px 0;
+        }
+
+        .presentation h2, .team h2, .services h2, .contact h2 {
+            font-size: 2.8rem;
+            color: #2d3748;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .presentation h2::after, .team h2::after, .services h2::after, .contact h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background: #667eea;
+            transform: translateX(-50%);
+        }
+
+        .presentation p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #4a5568;
+            text-align: center;
+        }
+
+        /* Équipe */
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        .team-member i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .team-member {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+       
+
+        .team-member h3 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .team-member p {
+            font-size: 1rem;
+            color: #4a5568;
+        }
+
+        /* Services */
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .service {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .service i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .service h3 {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .service p {
+            font-size: 1rem;
+            color: #4a5568;
+        }
+
+        /* Contact */
+        .contact p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .contact form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact form input, .contact form textarea {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: white;
+            color: #2d3748;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact form input:focus, .contact form textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .contact form button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact form button:hover {
+            background: #764ba2;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 80px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.8rem;
+            }
+
+            header p {
+                font-size: 1.2rem;
+            }
+
+            .team-members, .service-list {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 60px 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .signup-button {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav>
+        <div class="logo">SmartRecruit</div>
+        <ul>
+            <li><a href="#presentation">Accueil</a></li>
+            <li><a href="#team">Équipe</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#" class="signup-button">Signup</a></li>
+        </ul>
+    </nav>
+
+    <!-- En-tête -->
+    <header>
+        <h1>Recrutez intelligemment avec l’IA</h1>
+        <p>Des solutions intelligentes pour recrutez plus vite, recrutez plus juste.</p>
+    </header>
+
+    <!-- Présentation -->
+    <section id="presentation" class="presentation">
+        <div class="container">
+            <h2>Qui Sommes-Nous ?</h2>
+            <p>Une équipe d’étudiants passionnés par l’innovation, déterminés à transformer le monde du recrutement grâce à la technologie. 
+                Notre plateforme révolutionne le processus de sélection en combinant l’IA et l’analyse de données pour offrir aux entreprises un outil de recrutement intelligent et efficace. 
+                De la sélection des CV à l’évaluation des candidats via des entretiens vidéo assistés par IA, notre solution garantit une prise de décision plus rapide et objective. Rejoignez-nous dans cette aventure vers un recrutement plus juste, transparent et optimisé !</p>
+        </div>
+    </section>
+
+    <!-- Équipe -->
+    <section id="team" class="team">
+        <div class="container">
+            <h2>Notre Équipe</h2>
+            <div class="team-members">
+                <div class="team-member">
+                    <i class="fas fa-female"></i>
+                    <h3>AMANSAG HASNAE </h3>
+                    <p></p>
+                </div>
+                <div class="team-member">
+                    <i class="fas fa-female"></i>
+                    <h3>BISSI CHAIMA</h3>
+                    <p></p>
+                </div>
+                <div class="team-member">
+                    <i class="fas fa-female"></i>
+                    <h3>EL IDRISSI HAFSSA</h3>
+                    <p></p>
+                </div>
+                <div class="team-member">
+                    <i class="fas fa-female"></i>
+                    <h3> ELGHOZAIL KHADIJA</h3>
+                    <p></p>
+                </div>
+                <div class="team-member">
+                    <i class="fas fa-female"></i>
+                    <h3> HOTANY OUMNIA</h3>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Nos Services</h2>
+            <div class="service-list">
+                <div class="service">
+                    <i class="fas fa-comments"></i>
+                    <h3>Entretiens Pilotés par IA</h3>
+                    <p>Analyse intelligente des entretiens RH et technique .</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Publication d'Offres</h3>
+                    <p>Atteignez les meilleurs talents.</p>
+                </div>
+                <div class="service">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Classement de CV</h3>
+                    <p>Automatisation du tri des CV.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contactez-Nous</h2>
+            <p>Prêt à révolutionner votre recrutement ? Contactez-nous dès aujourd'hui !</p>
+            <form>
+                <input type="text" placeholder="Votre nom" required>
+                <input type="email" placeholder="Votre email" required>
+                <textarea placeholder="Votre message" rows="5" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 SmartRecruit. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+{% extends 'Authentication/company_dash_base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Entretiens | Entreprise{% endblock %}
+{% block header_title %}Gestion des Entretiens{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Gestion des Entretiens</h2>
+                    <p class="text-gray-600 mt-1">Suivez et gérez tous vos entretiens avec les candidats</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <a href="{% url 'company_dashboard' %}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> Retour au tableau de bord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="p-6">
+            <form method="get" class="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
+                <div class="flex-grow">
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+                    <select id="status" name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <option value="">Tous les statuts</option>
+                        <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Programmés</option>
+                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Terminés</option>
+                        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Annulés</option>
+                    </select>
+                </div>
+                <div class="md:self-end">
+                    <button type="submit" class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-filter mr-2"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Upcoming Interviews -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900">Entretiens à venir</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for interview in upcoming_interviews %}
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-blue-50 border-blue-200">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div class="mb-4 md:mb-0">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                    {% if interview.application.candidate.user.photo %}
+                                    <img src="{{ interview.application.candidate.user.photo.url }}" alt="{{ interview.application.candidate.full_name }}" class="h-10 w-10 rounded-full">
+                                    {% else %}
+                                    <i class="fas fa-user text-gray-500"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ interview.application.candidate.full_name|default:interview.application.candidate.user.email }}</div>
+                                    <div class="text-sm text-gray-600">{{ interview.application.job.title }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 flex items-center space-x-4">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="far fa-calendar-alt mr-1"></i>
+                                    <span>{{ interview.scheduled_at|date:"d/m/Y" }}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span>{{ interview.scheduled_at|date:"H:i" }}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-hourglass-half mr-1"></i>
+                                    <span>{{ interview.duration }}</span>
+                                </div>
+                            </div>
+                            
+                            {% if interview.meeting_link %}
+                            <div class="mt-2">
+                                <a href="{{ interview.meeting_link }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                                    <i class="fas fa-video mr-1"></i> Lien de réunion
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{% url 'application_detail' interview.application.id %}" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
+                                Voir candidature
+                            </a>
+                            <a href="{% url 'interview_result' interview.id %}" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm">
+                                Enregistrer résultat
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="flex flex-col items-center justify-center py-8 text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-calendar-check text-gray-400 text-xl"></i>
+                    </div>
+                    <p class="text-gray-600">Aucun entretien à venir</p>
+                    <p class="text-sm text-gray-500 mt-1">Les entretiens programmés apparaîtront ici.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Past Interviews -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900">Entretiens passés</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                {% for interview in past_interviews %}
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-green-50 border-green-200">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div class="mb-4 md:mb-0">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                    {% if interview.application.candidate.user.photo %}
+                                    <img src="{{ interview.application.candidate.user.photo.url }}" alt="{{ interview.application.candidate.full_name }}" class="h-10 w-10 rounded-full">
+                                    {% else %}
+                                    <i class="fas fa-user text-gray-500"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ interview.application.candidate.full_name|default:interview.application.candidate.user.email }}</div>
+                                    <div class="text-sm text-gray-600">{{ interview.application.job.title }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 flex items-center space-x-4">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="far fa-calendar-alt mr-1"></i>
+                                    <span>{{ interview.scheduled_at|date:"d/m/Y" }}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span>{{ interview.scheduled_at|date:"H:i" }}</span>
+                                </div>
+                            </div>
+                            
+                            {% if interview.result %}
+                            <div class="mt-2 flex items-center space-x-4">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-star mr-1 text-yellow-500"></i>
+                                    <span>Score: {{ interview.result.average_score|floatformat:1 }}/10</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="{% url 'application_detail' interview.application.id %}" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm">
+                                Voir candidature
+                            </a>
+                            {% if not interview.result %}
+                            <a href="{% url 'interview_result' interview.id %}" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm">
+                                Enregistrer résultat
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="flex flex-col items-center justify-center py-8 text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-history text-gray-400 text-xl"></i>
+                    </div>
+                    <p class="text-gray-600">Aucun entretien passé</p>
+                    <p class="text-sm text-gray-500 mt-1">Les entretiens terminés apparaîtront ici.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
