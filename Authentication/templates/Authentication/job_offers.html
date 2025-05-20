@@ -6,23 +6,28 @@
 
 {% block content %}
 <div class="space-y-8">
-    <!-- Search and Filters -->
-    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+    <!-- Search and Filters - Modern Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="p-6">
             <form method="get" action="{% url 'job_offers' %}" class="space-y-4">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex-1">
                         <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Rechercher</label>
                         <div class="relative">
-                            <input type="text" id="search" name="search" value="{{ request.GET.search|default:'' }}" placeholder="Titre, compétences, entreprise..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 pl-10">
+                            <input type="text" id="search" name="search" value="{{ request.GET.search|default:'' }}" 
+                                   placeholder="Titre, compétences, entreprise..." 
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 pl-10 transition-all">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
                             </div>
                         </div>
                     </div>
                     <div class="w-full md:w-1/4">
                         <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
-                        <select id="location" name="location" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <select id="location" name="location" 
+                                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all">
                             <option value="">Tous les lieux</option>
                             <option value="Paris" {% if request.GET.location == 'Paris' %}selected{% endif %}>Paris</option>
                             <option value="Lyon" {% if request.GET.location == 'Lyon' %}selected{% endif %}>Lyon</option>
@@ -32,7 +37,8 @@
                     </div>
                     <div class="w-full md:w-1/4">
                         <label for="contract_type" class="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
-                        <select id="contract_type" name="contract_type" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <select id="contract_type" name="contract_type" 
+                                class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all">
                             <option value="">Tous les contrats</option>
                             <option value="CDI" {% if request.GET.contract_type == 'CDI' %}selected{% endif %}>CDI</option>
                             <option value="CDD" {% if request.GET.contract_type == 'CDD' %}selected{% endif %}>CDD</option>
@@ -46,75 +52,88 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="flex items-center space-x-4">
                         <div class="flex items-center">
-                            <input id="match_only" name="match_only" type="checkbox" {% if request.GET.match_only %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <input id="match_only" name="match_only" type="checkbox" {% if request.GET.match_only %}checked{% endif %} 
+                                   class="h-4 w-4 text-blue-600 focus:ring-blue-300 border-gray-300 rounded transition-all">
                             <label for="match_only" class="ml-2 block text-sm text-gray-700">Afficher uniquement les offres correspondant à mon profil</label>
                         </div>
                     </div>
-                    <div class="flex space-x-2">
-                        <a href="{% url 'job_offers' %}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors text-sm">Réinitialiser</a>
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">Rechercher</button>
+                    <div class="flex space-x-3">
+                        <a href="{% url 'job_offers' %}" 
+                           class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-sm font-medium flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Réinitialiser
+                        </a>
+                        <button type="submit" 
+                                class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-sm font-medium flex items-center shadow-sm hover:shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Rechercher
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
     
-    <!-- Job Listings -->
-    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-900">Offres d'emploi ({{ jobs|length }})</h3>
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-600">Trier par:</span>
-                    <select id="sort-by" class="text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                        <option value="match">Meilleure correspondance</option>
-                        <option value="date">Date de publication</option>
-                        <option value="salary">Salaire</option>
-                    </select>
+    <!-- Job Listings - Modern Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">Offres d'emploi</h3>
+                    <p class="text-sm text-gray-500 mt-1">{{ jobs.paginator.count }} offres disponibles</p>
                 </div>
+                    
             </div>
         </div>
         
-        <div class="divide-y divide-gray-200">
+        <div class="divide-y divide-gray-100">
             {% for job in jobs %}
-            <div class="p-6 hover:bg-gray-50 transition-colors">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="p-6 hover:bg-blue-50/50 transition-colors group">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center flex-shrink-0 border border-gray-200">
                             {% if job.company.logo %}
                             <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }}" class="w-full h-full object-cover">
                             {% else %}
-                            <i class="fas fa-building text-gray-500"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
                             {% endif %}
                         </div>
                         <div>
-                            <h4 class="text-lg font-semibold text-gray-900">{{ job.title }}</h4>
+                            <h4 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ job.title }}</h4>
                             <p class="text-sm text-gray-600">{{ job.company.name }} • {{ job.location }}</p>
-                            <div class="flex items-center space-x-4 mt-2">
-                                <span class="inline-flex items-center text-xs text-gray-500">
-                                    <i class="fas fa-file-contract mr-1"></i> {{ job.contract_type }}
+                            <div class="flex flex-wrap items-center gap-3 mt-2">
+                                <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                                    {{ job.contract_type }}
                                 </span>
                                 {% if job.salary_min and job.salary_max %}
-                                <span class="inline-flex items-center text-xs text-gray-500">
-                                    <i class="fas fa-money-bill-wave mr-1"></i> {{ job.salary_min }} - {{ job.salary_max }} €
+                                <span class="inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full bg-green-100 text-green-800">
+                                    {{ job.salary_min }} - {{ job.salary_max }} €
                                 </span>
                                 {% endif %}
                                 <span class="inline-flex items-center text-xs text-gray-500">
-                                    <i class="fas fa-clock mr-1"></i> Publié {{ job.created_at|timesince }}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Publié {{ job.created_at|timesince }}
                                 </span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="flex items-center mt-4 md:mt-0">
-                        <div class="relative w-12 h-12 mr-4">
-                            <svg viewBox="0 0 36 36" class="w-full h-full">
-                                <path class="stroke-current text-gray-200" fill="none" stroke-width="3" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <path class="stroke-current text-green-500" fill="none" stroke-width="3" stroke-dasharray="{{ job.match_percentage }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                <text x="18" y="20.35" class="text-xs font-bold" text-anchor="middle" fill="#4B5563">{{ job.match_percentage }}%</text>
+                        <a href="{% url 'job_detail' job.id %}" 
+                           class="px-4 py-2.5 bg-white border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all text-sm font-medium shadow-sm hover:shadow-md">
+                            Voir l'offre
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
-                        </div>
-                        <a href="{% url 'job_detail' job.id %}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm">Voir l'offre</a>
+                        </a>
                     </div>
                 </div>
                 
@@ -122,51 +141,80 @@
                     <p class="text-sm text-gray-600 line-clamp-2">{{ job.description|truncatechars:200 }}</p>
                     <div class="flex flex-wrap gap-2 mt-3">
                         {% for tag in job.tags.all|slice:":5" %}
-                        <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">{{ tag.name }}</span>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-800 text-xs rounded-full hover:bg-gray-200 transition-colors">{{ tag.name }}</span>
                         {% endfor %}
                         {% if job.tags.count > 5 %}
-                        <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">+{{ job.tags.count|add:"-5" }}</span>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">+{{ job.tags.count|add:"-5" }}</span>
                         {% endif %}
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="p-8 text-center">
-                <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-search text-gray-400 text-xl"></i>
+                <div class="w-16 h-16 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune offre trouvée</h3>
-                <p class="text-gray-600">Essayez de modifier vos critères de recherche ou revenez plus tard.</p>
+                <p class="text-gray-600 max-w-md mx-auto">Essayez de modifier vos critères de recherche ou revenez plus tard pour découvrir de nouvelles opportunités.</p>
+                <a href="{% url 'job_offers' %}" class="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    Réinitialiser la recherche
+                </a>
             </div>
             {% endfor %}
         </div>
         
-        <!-- Pagination -->
+        <!-- Pagination - Modern Style -->
         {% if jobs.has_other_pages %}
-        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <div class="flex justify-between items-center">
+        <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="text-sm text-gray-700">
                     Affichage de <span class="font-medium">{{ jobs.start_index }}</span> à <span class="font-medium">{{ jobs.end_index }}</span> sur <span class="font-medium">{{ jobs.paginator.count }}</span> offres
                 </div>
-                <div class="flex space-x-1">
+                <div class="flex items-center space-x-2">
                     {% if jobs.has_previous %}
-                    <a href="?page={{ jobs.previous_page_number }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Précédent</a>
+                    <a href="?page={{ jobs.previous_page_number }}" 
+                       class="px-3.5 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Précédent
+                    </a>
                     {% else %}
-                    <span class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-500 cursor-not-allowed">Précédent</span>
+                    <span class="px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-400 cursor-not-allowed flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Précédent
+                    </span>
                     {% endif %}
                     
-                    {% for i in jobs.paginator.page_range %}
-                        {% if jobs.number == i %}
-                        <span class="px-3 py-1 bg-blue-500 border border-blue-500 rounded-md text-sm text-white">{{ i }}</span>
-                        {% else %}
-                        <a href="?page={{ i }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">{{ i }}</a>
-                        {% endif %}
-                    {% endfor %}
+                    <div class="flex space-x-1">
+                        {% for i in jobs.paginator.page_range %}
+                            {% if jobs.number == i %}
+                            <span class="px-3.5 py-2 bg-blue-600 border border-blue-600 rounded-lg text-sm text-white">{{ i }}</span>
+                            {% elif i > jobs.number|add:'-3' and i < jobs.number|add:'3' %}
+                            <a href="?page={{ i }}" class="px-3.5 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                     
                     {% if jobs.has_next %}
-                    <a href="?page={{ jobs.next_page_number }}" class="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Suivant</a>
+                    <a href="?page={{ jobs.next_page_number }}" 
+                       class="px-3.5 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
+                        Suivant
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
                     {% else %}
-                    <span class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-500 cursor-not-allowed">Suivant</span>
+                    <span class="px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-400 cursor-not-allowed flex items-center">
+                        Suivant
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </span>
                     {% endif %}
                 </div>
             </div>
