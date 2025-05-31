@@ -108,6 +108,12 @@
                                 <span>Mon profil</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{% url 'logout' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'logout' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                                <i class="fas fa-window-close w-5 h-5 mr-3"></i>
+                                <span>Déconnexion</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>

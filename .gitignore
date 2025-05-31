@@ -172,4 +172,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
+# PyPI upload cache
+#  This is used by the `twine` tool to cache the last upload URL.
+Authentication/crossencoder
