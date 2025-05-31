@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
-from .models import Candidat, Company, JobApplication, CandidateSkill, Job, Interview, InterviewResult, Benefit
+from .models import Candidat, Company, JobApplication, CandidateSkill, Job,  Benefit
 from django.utils import timezone
 from datetime import timedelta
 
@@ -167,38 +167,3 @@ class JobForm(forms.ModelForm):
             'requirements': forms.Textarea(attrs={'rows': 5}),
         }
 
-
-class InterviewScheduleForm(forms.ModelForm):
-    class Meta:
-        model = Interview
-        fields = ['scheduled_at', 'duration', 'meeting_link', 'notes']
-        widgets = {
-            'scheduled_at': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'notes': forms.Textarea(attrs={'rows': 3}),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Set default date to tomorrow
-        tomorrow = timezone.now() + timedelta(days=1)
-        tomorrow = tomorrow.replace(hour=9, minute=0, second=0, microsecond=0)
-        self.fields['scheduled_at'].initial = tomorrow
-        # Set default duration to 30 minutes
-        self.fields['duration'].initial = timedelta(minutes=30)
-
-class InterviewResultForm(forms.ModelForm):
-    class Meta:
-        model = InterviewResult
-        fields = ['technical_score', 'communication_score', 'cultural_fit_score', 'feedback']
-        widgets = {
-            'feedback': forms.Textarea(attrs={'rows': 4}),
-        }
-
-
-class SkillForm(forms.Form):
-    skill_name = forms.CharField(max_length=100, required=True, label='Compétence')
-    skill_level = forms.ChoiceField(
-        choices=CandidateSkill.LEVEL_CHOICES,
-        required=True,
-        label='Niveau'
-    )

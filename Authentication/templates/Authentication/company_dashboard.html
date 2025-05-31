@@ -116,37 +116,12 @@
             <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-gray-900">Entretiens à venir</h3>
-                    <a href="{% url 'interview_management' %}" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
                         Voir tous
                     </a>
                 </div>
             </div>
-            <div class="p-6">
-                <div class="space-y-4">
-                    {% for interview in upcoming_interviews %}
-                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="text-base font-semibold text-gray-900">{{ interview.application.candidate.full_name|default:interview.application.candidate.user.email }}</h4>
-                                <p class="text-sm text-gray-600">{{ interview.application.job.title }}</p>
-                                <div class="mt-2 flex items-center text-sm text-gray-600">
-                                    <i class="far fa-calendar-alt mr-1"></i>
-                                    <span>{{ interview.scheduled_at|date:"d/m/Y H:i" }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="flex flex-col items-center justify-center py-8 text-center">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <i class="fas fa-calendar-check text-gray-400 text-xl"></i>
-                        </div>
-                        <p class="text-gray-600">Aucun entretien programmé</p>
-                        <p class="text-sm text-gray-500 mt-1">Les entretiens à venir apparaîtront ici.</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+            
         </div>
     </div>
     

@@ -195,36 +195,6 @@ class JobApplication(models.Model):
     def __str__(self):
         return f"{self.candidate.user.email} - {self.job.title}"
 
-class Interview(models.Model):
-    STATUS_CHOICES = (
-        ('scheduled', 'Programmé'),
-        ('completed', 'Terminé'),
-        ('cancelled', 'Annulé'),
-    )
-    
-    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name='interviews')
-    scheduled_at = models.DateTimeField()
-    duration = models.DurationField(default=timedelta(minutes=30))
-    meeting_link = models.URLField(blank=True, null=True)
-    notes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
-    
-    def __str__(self):
-        return f"Entretien: {self.application.candidate.user.email} - {self.application.job.title}"
-
-class InterviewResult(models.Model):
-    interview = models.OneToOneField(Interview, on_delete=models.CASCADE, related_name='result')
-    technical_score = models.IntegerField(default=0)
-    communication_score = models.IntegerField(default=0)
-    cultural_fit_score = models.IntegerField(default=0)
-    feedback = models.TextField()
-    
-    @property
-    def average_score(self):
-        return (self.technical_score + self.communication_score + self.cultural_fit_score) / 3
-    
-    def __str__(self):
-        return f"Résultat: {self.interview}"
 
 class Activity(models.Model):
     TYPE_CHOICES = (

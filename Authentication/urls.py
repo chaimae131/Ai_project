@@ -22,9 +22,9 @@ urlpatterns = [
     path('company/jobs/<int:job_id>/edit/', views.edit_job, name='edit_job'),
     path('company/jobs/<int:job_id>/applications/', views.job_applications, name='job_applications'),
     path('company/applications/<int:application_id>/', views.application_detail, name='application_detail'),
-    path('company/applications/<int:application_id>/schedule/', views.schedule_interview, name='schedule_interview'),
-    path('company/interviews/', views.interview_management, name='interview_management'),
-    path('company/interviews/<int:interview_id>/result/', views.interview_result, name='interview_result'),
+    #path('company/applications/<int:application_id>/schedule/', views.schedule_interview, name='schedule_interview'),
+    #path('company/interviews/', views.interview_management, name='interview_management'),
+    #path('company/interviews/<int:interview_id>/result/', views.interview_result, name='interview_result'),
 
     
     #je l'ai ajouté

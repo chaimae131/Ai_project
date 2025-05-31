@@ -97,7 +97,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{% url 'interview_management' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'interview_management' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                            <a href="#" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == '#' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
                                 <i class="fas fa-video w-5 h-5 mr-3"></i>
                                 <span>Entretiens</span>
                             </a>
@@ -159,7 +159,7 @@
                 <i class="fas fa-plus-circle text-lg mb-1"></i>
                 Publier
             </a>
-            <a href="{% url 'interview_management' %}" class="flex flex-col items-center text-xs p-2 {% if request.resolver_match.url_name == 'interview_management' %}text-blue-400{% endif %}">
+            <a href="#">
                 <i class="fas fa-video text-lg mb-1"></i>
                 Entretiens
             </a>
