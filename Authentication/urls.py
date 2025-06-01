@@ -40,4 +40,8 @@ urlpatterns = [
     
     # Profil
     path('candidate/profile/edit/', views.edit_candidate_profile, name='edit_candidate_profile'),
+    
+    #j'ai ajouté ces deux pour le cote candidat et company pour les entretiens 
+    path('mes-candidatures/', views.Allapplications, name='Allapplications'),
+    path('interviews/', views.company_interviews, name='company_interviews'),
 ]

@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -899,3 +898,35 @@ def application_detail(request, application_id):
     }
     
     return render(request, 'Authentication/application_detail.html', context)
+
+
+#jai ajouter cela pour candidat ou on voit les candidatures leur status et les entretien
+@login_required
+def Allapplications(request):
+
+    applications = JobApplication.objects.filter(
+        candidate=request.user.candidat_profile
+    ).select_related('job', 'job__company').prefetch_related('interviews').order_by('-created_at')
+    
+    context = {
+        'applications': applications,
+        'candidate': request.user.candidat_profile,
+    }
+    return render(request, 'Authentication/application2.html', context)
+
+#jai ajouter cela pour l'entreprise pour q'elle voit pour chaque offre les entretiens associer
+@login_required
+def company_interviews(request):
+    # Récupérer l'entreprise de l'utilisateur connecté
+    company = request.user.company_profile
+    
+    # Récupérer toutes les offres d'emploi de l'entreprise
+    jobs = Job.objects.filter(company=company).prefetch_related(
+        'applications__interviews__analysis'
+    )
+    
+    context = {
+        'jobs': jobs,
+    }
+    
+    return render(request, 'Authentication/company_interviews.html', context)

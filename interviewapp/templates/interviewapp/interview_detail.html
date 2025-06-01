@@ -1,0 +1,110 @@
+{% extends "interviewapp/base.html" %}
+
+{% block title %}Détails de l'Entretien{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto">
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 class="text-2xl font-bold text-gray-900">Résultat de l'entretien</h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Informations de base -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informations</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-5 text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900"><span class="font-medium">Candidat:</span> {{ interview.candidate.full_name }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-5 text-gray-500">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900"><span class="font-medium">Date:</span> {{ interview.created_at|date:"d/m/Y H:i" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-5 text-gray-500">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900"><span class="font-medium">Statut:</span> 
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if interview.status == 'D' %}bg-green-100 text-green-800
+                                        {% elif interview.status == 'C' %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-blue-100 text-blue-800{% endif %}">
+                                        {{ interview.get_status_display }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Résultat final -->
+                <div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Résultat Final</h3>
+                        
+                        {% if interview.status == 'D' %}
+                            {% if interview.result == 'P' %}
+                                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="text-lg font-medium text-green-800">Réussi</h4>
+                                            <p class="mt-1 text-sm text-green-700">Score de stress acceptable</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-times-circle text-red-500 text-xl"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="text-lg font-medium text-red-800">Échoué</h4>
+                                            <p class="mt-1 text-sm text-red-700">Score de stress trop élevé</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-hourglass-half text-blue-500 text-xl"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h4 class="text-lg font-medium text-blue-800">En cours d'analyse</h4>
+                                        <p class="mt-1 text-sm text-blue-700">Les résultats seront disponibles bientôt</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- Instructions pour le candidat -->
+           <div class="mt-8">
+                <a href="{% url 'candidate_dashboard' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-home mr-2"></i> Retour au tableau de bord
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

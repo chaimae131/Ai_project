@@ -1,0 +1,44 @@
+{% extends "interviewapp/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Nouvel Entretien{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 class="text-2xl font-bold text-gray-900">Préparation de l'entretien</h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="alert bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h4 class="font-medium">Instructions</h4>
+                        <p class="mt-1 text-sm">L'entretien se compose de questions aléatoires. Pour chaque question :</p>
+                        <ul class="list-disc pl-5 mt-1 text-sm space-y-1">
+                            <li>Préparer et téléverser la vidéo de chaque réponse</li>
+                            <li>2 minutes maximum pour répondre en vidéo</li>
+                            <li>Vous avez possibilité de revoir votre réponse avant de continuer</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" class="mt-6">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="mt-6">
+                    <button type="submit" class="w-full md:w-auto inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-video mr-2"></i> Commencer l'entretien
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

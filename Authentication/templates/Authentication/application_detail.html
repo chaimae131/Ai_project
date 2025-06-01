@@ -19,7 +19,7 @@
                         <i class="fas fa-arrow-left mr-2"></i> Retour aux candidatures
                     </a>
                     {% if application.status != 'interview' and application.status != 'accepted' %}
-                    <a href="{% url '#' application.id %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                    <a href="#" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
                         <i class="fas fa-calendar-plus mr-2"></i> Planifier un entretien
                     </a>
                     {% endif %}

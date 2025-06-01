@@ -175,3 +175,4 @@ cython_debug/
 # PyPI upload cache
 #  This is used by the `twine` tool to cache the last upload URL.
 Authentication/crossencoder
+media

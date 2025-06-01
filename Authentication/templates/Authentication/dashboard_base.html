@@ -90,16 +90,11 @@
                                 <span>Offres d'emploi</span>
                             </a>
                         </li>
+                        
                         <li>
-                            <a href="{% url 'applications' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'applications' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                            <a href="{% url 'Allapplications' %}" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == 'Allapplications' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
                                 <i class="fas fa-file-alt w-5 h-5 mr-3"></i>
                                 <span>Mes candidatures</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center px-4 py-3 rounded-lg transition-colors duration-200 {% if request.resolver_match.url_name == '#' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                                <i class="fas fa-video w-5 h-5 mr-3"></i>
-                                <span>Entretiens</span>
                             </a>
                         </li>
                         <li>

@@ -1,0 +1,135 @@
+{% extends "Authentication/dashboard_base.html" %}
+
+{% block title %}Mes candidatures - RemoteInterview{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Mes candidatures et Entretiens </h1>
+    
+    {% if applications %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <!-- En-tête du tableau inchangé -->
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Offre d'emploi</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                    
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for application in applications %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <!-- Colonnes existantes -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium text-gray-900">{{ application.job.title }}</div>
+                        <div class="text-sm text-gray-500">{{ application.job.job_type }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-gray-900">{{ application.job.company.company_name }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ application.created_at|date:"d/m/Y" }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if application.status == 'pending' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                En attente
+                            </span>
+                        {% elif application.status == 'reviewing' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                En examen
+                            </span>
+                        {% elif application.status == 'interview' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                Entretien
+                            </span>
+                        {% elif application.status == 'accepted' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Acceptée
+                            </span>
+                        {% elif application.status == 'rejected' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                Rejetée
+                            </span>
+                        {% endif %}
+                    </td>
+                    
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <a href="{% url 'job_detail' application.job.id %}" class="text-blue-600 hover:text-blue-900 mr-3">Voir l'offre</a>
+                        {% if application.resume %}
+                            <a href="{{ application.resume.url }}" class="text-indigo-600 hover:text-indigo-900" download>Télécharger CV</a>
+                        {% endif %}
+                        
+                        <!-- Bouton pour passer l'entretien -->
+                        {% if application.status == 'interview' %}
+                            {% if application.interviews.exists %}
+                                <a href="{% url 'interviewapp:interview_detail' application.interviews.first.unique_id %}" 
+                                   class="ml-3 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Voir l'entretien
+                                </a>
+                            {% else %}
+                                <a href="{% url 'interviewapp:interview_start' %}?application_id={{ application.id }}" 
+                                   class="ml-3 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Passer l'entretien
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                
+                <!-- Section pour afficher les entretiens liés -->
+                {% if application.interviews.exists %}
+                <tr>
+                    <td colspan="6" class="px-6 py-4 bg-gray-50">
+                        <h4 class="text-sm font-medium text-gray-900 mb-2">Entretiens pour cette candidature:</h4>
+                        <div class="space-y-3">
+                            {% for interview in application.interviews.all %}
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-xs border border-gray-200">
+                                <div>
+                                    <span class="text-sm font-medium">
+                                        Entretien du {{ interview.created_at|date:"d/m/Y" }}
+                                    </span>
+                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if interview.status == 'C' %}bg-green-100 text-green-800
+                                        {% elif interview.status == 'O' %}bg-blue-100 text-blue-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ interview.get_status_display }}
+                                    </span>
+                                    {% if interview.result != 'N' %}
+                                    <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if interview.result == 'P' %}bg-green-100 text-green-800
+                                        {% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ interview.get_result_display }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <a href="{% url 'interviewapp:interview_detail' interview.unique_id %}" 
+                                   class="text-sm text-purple-600 hover:text-purple-800">
+                                    Détails <i class="fas fa-chevron-right ml-1"></i>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <i class="fas fa-file-alt text-4xl text-gray-300 mb-4"></i>
+        <h3 class="text-lg font-medium text-gray-900 mb-1">Aucune candidature</h3>
+        <p class="text-gray-500 mb-6">Vous n'avez postulé à aucune offre pour le moment.</p>
+        <a href="{% url 'job_offers' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <i class="fas fa-briefcase mr-2"></i> Voir les offres disponibles
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

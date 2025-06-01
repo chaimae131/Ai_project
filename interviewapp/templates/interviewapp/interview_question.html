@@ -1,0 +1,45 @@
+{% extends "interviewapp/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Question d'entretien{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-900">Question {{ interview_question.order }}</h2>
+                <span class="text-sm text-gray-500">Progression: {{ interview_question.order }} sur 4 </span>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="mb-6">
+                <h3 class="text-lg font-medium text-gray-900">{{ interview_question.question.text }}</h3>
+                
+                <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-clock text-yellow-500 mt-1"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">Vous avez 2 minutes pour répondre en vidéo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="post" enctype="multipart/form-data" id="videoForm" class="mt-6">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="mt-6">
+                    <button type="submit" class="w-full md:w-auto inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-video mr-2"></i> Enregistrer ma réponse
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

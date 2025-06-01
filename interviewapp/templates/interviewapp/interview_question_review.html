@@ -1,0 +1,71 @@
+{% extends "interviewapp/base.html" %}
+
+{% block title %}Révision de réponse{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 class="text-2xl font-bold text-gray-900">Révision de votre réponse</h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Question Section -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Question {{ interview_question.order }}</h3>
+                    <p class="text-gray-700 mb-6">{{ interview_question.question.text }}</p>
+                    
+                    <div class="rounded-lg overflow-hidden bg-black">
+                        <video controls class="w-full">
+                            <source src="{{ video_response.video_file.url }}" type="video/mp4">
+                            Votre navigateur ne supporte pas la lecture de vidéos.
+                        </video>
+                    </div>
+                </div>
+                
+                <!-- Analysis Section -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Analyse</h3>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-spinner fa-spin text-blue-500 mt-1"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h4 class="font-medium text-blue-800">Analyse en cours</h4>
+                                <p class="mt-1 text-sm text-blue-700">Votre réponse est en cours d'analyse. Cette opération peut prendre quelques minutes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="mt-8 flex justify-between">
+                {% if interview_question.order > 1 %}
+                    <a href="{% url 'interviewapp:interview_question' unique_id=interview.unique_id question_order=interview_question.order|add:'-1' %}" 
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-arrow-left mr-2"></i> Question précédente
+                    </a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+                
+                {% if next_question %}
+                    <a href="{% url 'interviewapp:interview_question' unique_id=interview.unique_id question_order=next_question.order %}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Question suivante <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'interviewapp:interview_complete' unique_id=interview.unique_id %}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <i class="fas fa-check-circle mr-2"></i> Terminer l'entretien
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
