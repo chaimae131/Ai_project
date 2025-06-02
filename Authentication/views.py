@@ -917,16 +917,12 @@ def Allapplications(request):
 #jai ajouter cela pour l'entreprise pour q'elle voit pour chaque offre les entretiens associer
 @login_required
 def company_interviews(request):
-    # Récupérer l'entreprise de l'utilisateur connecté
     company = request.user.company_profile
-    
-    # Récupérer toutes les offres d'emploi de l'entreprise
     jobs = Job.objects.filter(company=company).prefetch_related(
-        'applications__interviews__analysis'
+        'applications__interviews__analysis',
+        'applications__technical_tests__sessions__report',  # Nouveau
+        'applications__technical_tests__sessions__candidate__user',
+        'applications__technical_tests__questions'
     )
-    
-    context = {
-        'jobs': jobs,
-    }
-    
+    context = {'jobs': jobs}
     return render(request, 'Authentication/company_interviews.html', context)

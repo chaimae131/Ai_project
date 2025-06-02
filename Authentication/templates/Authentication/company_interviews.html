@@ -22,17 +22,20 @@
             {% if job.applications.all %}
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
+                    <!-- Ajoutez une nouvelle colonne dans l'en-tête du tableau -->
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidat</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut entretien</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th> <!-- Nouvelle colonne -->
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Résultat</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for application in job.applications.all %}
-                            {% for interview in application.interviews.all %}
+                            <!-- Entretiens virtuels -->
+                             {% for interview in application.interviews.all %}
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
@@ -89,6 +92,79 @@
                                     Aucun entretien pour cette candidature
                                 </td>
                             </tr>
+                            {% endfor %}
+
+                            
+                            <!-- Tests techniques -->
+                            {% for test in application.technical_tests.all %}
+                                {% for session in test.sessions.all %}
+                                {% if session.candidate == application.candidate %}
+                                <tr>
+                                    <!-- Colonne Candidat (même que pour les entretiens) -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                {% if session.candidate.user.photo %}
+                                                    <img class="h-10 w-10 rounded-full" src="{{ session.candidate.user.photo.url }}" alt="">
+                                                {% else %}
+                                                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                        <i class="fas fa-user text-gray-400"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    {{ session.candidate.full_name|default:session.candidate.user.email }}
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                    {{ session.candidate.user.email }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <!-- Type -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        Test technique: {{ test.title }}
+                                    </td>
+                                    
+                                    <!-- Statut -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {% if session.status == 'E' %}bg-green-100 text-green-800
+                                            {% elif session.status == 'O' %}bg-blue-100 text-blue-800
+                                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                            {{ session.get_status_display }}
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Résultat -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {% if session.passed %}bg-green-100 text-green-800
+                                            {% else %}bg-red-100 text-red-800{% endif %}">
+                                            {% if session.status == 'E' %}
+                                                {{ session.score|default:"0" }}/{{ session.max_score }}
+                                            {% else %}
+                                                Non évalué
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {% if session.report %}
+                                            <a href="{% url 'quiz:view_test_report' session.report.id %}"
+                                            class="text-blue-600 hover:text-blue-900 mr-3">
+                                                <i class="fas fa-download"></i> Rapport test
+                                            </a>
+                                        {% else %}
+                                            <span class="text-gray-400">Rapport non disponible</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         {% endfor %}
                     </tbody>

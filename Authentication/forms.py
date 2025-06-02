@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import Candidat, Company, JobApplication, CandidateSkill, Job,  Benefit
 from django.utils import timezone
 from datetime import timedelta
+import json
 
 User = get_user_model()
 
@@ -60,7 +61,7 @@ class CandidatProfileForm(forms.ModelForm):
     addresse = forms.CharField(max_length=255, required=False)
     photo = forms.ImageField(required=False)
     links = forms.URLField(required=False)
-    
+    phone_number = forms.CharField(max_length=15, required=False, label='Téléphone')
     class Meta:
         model = Candidat
         fields = ('full_name', 'cv', 'type_de_contrat', 'experience')
@@ -73,6 +74,7 @@ class CandidatProfileForm(forms.ModelForm):
             self.fields['bio'].initial = user.bio
             self.fields['addresse'].initial = user.addresse
             self.fields['links'].initial = user.links
+            self.fields['phone_number'].initial = user.phone_number
     
     def save(self, user=None, commit=True):
         profile = super().save(commit=False)
@@ -81,6 +83,7 @@ class CandidatProfileForm(forms.ModelForm):
             user.bio = self.cleaned_data.get('bio', '')
             user.addresse = self.cleaned_data.get('addresse', '')
             user.links = self.cleaned_data.get('links', '')
+            user.phone_number = self.cleaned_data.get('phone_number', '')
             
             if self.cleaned_data.get('photo'):
                 user.photo = self.cleaned_data.get('photo')
@@ -95,6 +98,7 @@ class CandidatProfileForm(forms.ModelForm):
 
 class CompanyProfileForm(forms.ModelForm):
     photo = forms.ImageField(required=False)
+    phone_number = forms.CharField(max_length=15, required=False, label='Téléphone')
     
     class Meta:
         model = Company

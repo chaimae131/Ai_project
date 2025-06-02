@@ -1,0 +1,24 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block title %}Test Terminé{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="p-6 text-center">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-green-500 text-4xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Test Terminé !</h2>
+            <p class="text-gray-600 mb-6">Vous avez complété le test technique. Votre rapport est en cours de génération.</p>
+            
+            <div class="flex justify-center">
+                <a href="{% url 'quiz:review' session_uuid=session.unique_id %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Voir les résultats <i class="fas fa-chart-bar ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

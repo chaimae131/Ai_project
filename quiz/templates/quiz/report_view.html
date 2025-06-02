@@ -1,0 +1,58 @@
+{% extends "quiz/base.html" %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Rapport de Test Technique</h1>
+        <a href="?download=1" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <i class="fas fa-download mr-2"></i>Télécharger PDF
+        </a>
+    </div>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-2">Informations générales</h2>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+                <p class="text-gray-600">Candidat:</p>
+                <p class="font-medium">{{ report.session.candidate.full_name }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">Test:</p>
+                <p class="font-medium">{{ report.session.test.title }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">Date:</p>
+                <p class="font-medium">{{ report.generated_at|date:"d/m/Y" }}</p>
+            </div>
+            <div>
+                <p class="text-gray-600">Score global:</p>
+                <p class="font-medium">{{ report.overall_score }}/{{ report.session.max_score|default:"100" }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Évaluation par compétence</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-2 px-4 border-b">Compétence</th>
+                        <th class="py-2 px-4 border-b">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for skill, score in report.skills_evaluation.items %}
+                    <tr>
+                        <td class="py-2 px-4 border-b">{{ skill }}</td>
+                        <td class="py-2 px-4 border-b text-center">{{ score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
+</div>
+{% endblock %}

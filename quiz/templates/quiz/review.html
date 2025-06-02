@@ -1,0 +1,160 @@
+{% extends 'quiz/base.html' %}
+{% load static %}
+
+{% block title %}Résultats du Test{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Résumé global -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100 mb-8">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-semibold text-gray-800">Rapport du Test Technique</h2>
+            <p class="text-gray-600 mt-1">Session du {{ session.completed_at|date:"d/m/Y" }}</p>
+        </div>
+        
+        <div class="p-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Score Global</h3>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">{{ session.score }} / {{ session.max_score }}</p>
+                    <div class="mt-1">
+                        <span class="text-sm font-medium text-gray-600">Soit {{ report.overall_score|floatformat:1 }}%</span>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Évaluation par compétence -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100 mb-8">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Évaluation par Compétence</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-6">
+                {% for skill, data in report.skills_evaluation.items %}
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">{{ skill }}</span>
+                        <span class="text-sm font-medium text-blue-600">{{ data.score|floatformat:1 }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-2.5 rounded-full" style="width: {{ data.score }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Analyse détaillée 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        
+        <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+            <div class="p-6 border-b border-gray-200 bg-green-50">
+                <h3 class="text-lg font-medium text-green-700">
+                    <i class="fas fa-check-circle mr-2"></i> Points Forts
+                </h3>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-700">{{ report.strengths }}</p>
+            </div>
+        </div>
+        
+       
+        <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+            <div class="p-6 border-b border-gray-200 bg-red-50">
+                <h3 class="text-lg font-medium text-red-700">
+                    <i class="fas fa-exclamation-circle mr-2"></i> Points à Améliorer
+                </h3>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-700">{{ report.weaknesses }}</p>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Recommandations</h3>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-700">{{ report.recommendations }}</p>
+        </div>
+    </div>-->
+    
+    <!-- Détail des réponses -->
+    <div class="mt-8 bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-xl font-semibold text-gray-800">Détail des Réponses</h3>
+        </div>
+        
+        <div class="divide-y divide-gray-200">
+            {% for response in responses %}
+            <div class="p-6">
+                <div class="flex justify-between">
+                    <h4 class="text-lg font-medium text-gray-900">Question {{ response.question.order }}</h4>
+                    <span class="text-sm font-medium {% if response.points_earned >= 3 %}text-green-600{% else %}text-red-600{% endif %}">
+                        {{ response.points_earned|floatformat:1 }} / 4
+                    </span>
+                </div>
+                <p class="text-gray-700 mt-2 font-medium">{{ response.question.text }}</p>
+                
+                <div class="mt-4">
+                    <p class="text-gray-700"><span class="font-medium">Votre réponse :</span> 
+                        {% if response.question.question_type == 'QCM' %}
+                            {{ response.answer_choice|upper }}. 
+                            {% if response.answer_choice == 'a' %}{{ response.question.option_a }}{% endif %}
+                            {% if response.answer_choice == 'b' %}{{ response.question.option_b }}{% endif %}
+                            {% if response.answer_choice == 'c' %}{{ response.question.option_c }}{% endif %}
+                            {% if response.answer_choice == 'd' %}{{ response.question.option_d }}{% endif %}
+                        {% else %}
+                            {{ response.answer_text }}
+                        {% endif %}
+                    </p>
+                    <p class="text-gray-700 mt-2"><span class="font-medium">Feedback :</span> {{ response.feedback }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation pour les scores circulaires
+        const circleElements = document.querySelectorAll('svg path.text-blue-500');
+        circleElements.forEach(function(circle) {
+            const length = circle.getTotalLength();
+            circle.style.transition = 'none';
+            circle.style.strokeDasharray = length + ' ' + length;
+            circle.style.strokeDashoffset = length;
+            
+            // Force reflow
+            circle.getBoundingClientRect();
+            
+            circle.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
+            circle.style.strokeDashoffset = '0';
+        });
+        
+        // Animation pour les barres de progression
+        const progressBars = document.querySelectorAll('.bg-gradient-to-r');
+        progressBars.forEach(function(bar) {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            
+            // Force reflow
+            bar.getBoundingClientRect();
+            
+            setTimeout(function() {
+                bar.style.width = width;
+            }, 300);
+        });
+    });
+</script>
+{% endblock %}

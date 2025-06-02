@@ -9,21 +9,18 @@
     {% if applications %}
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
-            <!-- En-tête du tableau inchangé -->
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Offre d'emploi</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                    
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 {% for application in applications %}
                 <tr class="hover:bg-gray-50 transition-colors">
-                    <!-- Colonnes existantes -->
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="font-medium text-gray-900">{{ application.job.title }}</div>
                         <div class="text-sm text-gray-500">{{ application.job.job_type }}</div>
@@ -36,35 +33,25 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         {% if application.status == 'pending' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                En attente
-                            </span>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">En attente</span>
                         {% elif application.status == 'reviewing' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                En examen
-                            </span>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">En examen</span>
                         {% elif application.status == 'interview' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                Entretien
-                            </span>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Entretien</span>
+                        {% elif application.status == 'tinterview' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Entretien technique</span>
                         {% elif application.status == 'accepted' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                Acceptée
-                            </span>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Acceptée</span>
                         {% elif application.status == 'rejected' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                Rejetée
-                            </span>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejetée</span>
                         {% endif %}
                     </td>
-                    
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <a href="{% url 'job_detail' application.job.id %}" class="text-blue-600 hover:text-blue-900 mr-3">Voir l'offre</a>
                         {% if application.resume %}
                             <a href="{{ application.resume.url }}" class="text-indigo-600 hover:text-indigo-900" download>Télécharger CV</a>
                         {% endif %}
-                        
-                        <!-- Bouton pour passer l'entretien -->
+
                         {% if application.status == 'interview' %}
                             {% if application.interviews.exists %}
                                 <a href="{% url 'interviewapp:interview_detail' application.interviews.first.unique_id %}" 
@@ -78,10 +65,23 @@
                                 </a>
                             {% endif %}
                         {% endif %}
+
+                        {% if application.status == 'tinterview' %}
+                            {% if application.technical_tests.exists and application.technical_tests.first.sessions.exists %}
+                                <a href="{% url 'quiz:review' application.technical_tests.first.sessions.first.unique_id %}" 
+                                   class="ml-3 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Voir le test
+                                </a>
+                            {% else %}
+                                <a href="{% url 'quiz:start' application.id %}" 
+                                   class="ml-3 inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                    Passer le test
+                                </a>
+                            {% endif %}
+                        {% endif %}
                     </td>
                 </tr>
-                
-                <!-- Section pour afficher les entretiens liés -->
+
                 {% if application.interviews.exists %}
                 <tr>
                     <td colspan="6" class="px-6 py-4 bg-gray-50">
@@ -90,9 +90,7 @@
                             {% for interview in application.interviews.all %}
                             <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-xs border border-gray-200">
                                 <div>
-                                    <span class="text-sm font-medium">
-                                        Entretien du {{ interview.created_at|date:"d/m/Y" }}
-                                    </span>
+                                    <span class="text-sm font-medium">Entretien du {{ interview.created_at|date:"d/m/Y" }}</span>
                                     <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                         {% if interview.status == 'C' %}bg-green-100 text-green-800
                                         {% elif interview.status == 'O' %}bg-blue-100 text-blue-800
@@ -117,6 +115,55 @@
                     </td>
                 </tr>
                 {% endif %}
+
+                {% if application.technical_tests.exists %}
+                <tr>
+                    <td colspan="6" class="px-6 py-4 bg-gray-50">
+                        <h4 class="text-sm font-medium text-gray-900 mb-2">Tests techniques pour cette candidature:</h4>
+                        <div class="space-y-3">
+                            {% for test in application.technical_tests.all %}
+                                {% if not test.sessions.exists %}
+                                    <a href="{% url 'quiz:technical_test_start' application.id %}" 
+                                       class="inline-flex items-center px-3 py-1 mb-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                        Passer le test
+                                    </a>
+                                {% endif %}
+
+                                {% for session in test.sessions.all %}
+                                <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-xs border border-gray-200">
+                                    <div>
+                                        <span class="text-sm font-medium">Test du {{ session.created_at|date:"d/m/Y" }}</span>
+                                        <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {% if session.status == 'E' %}bg-green-100 text-green-800
+                                            {% elif session.status == 'O' %}bg-blue-100 text-blue-800
+                                            {% elif session.status == 'C' %}bg-yellow-100 text-yellow-800
+                                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                            {{ session.get_status_display }}
+                                        </span>
+                                        {% if session.status == 'E' %}
+                                        <span class="ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {% if session.passed %}
+                                                bg-green-100 text-green-800
+                                            {% elif session.score is not None and session.max_score and session.max_score > 0 %}
+                                                bg-red-100 text-red-800
+                                            {% else %}
+                                                bg-gray-100 text-gray-800
+                                            {% endif %}">
+                                            Score: {{ session.score|default:"0" }}/{{ session.max_score|default:"0" }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url 'quiz:review' session.unique_id %}" class="text-sm text-purple-600 hover:text-purple-800">
+                                        Voir le test <i class="fas fa-chevron-right ml-1"></i>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+
                 {% endfor %}
             </tbody>
         </table>

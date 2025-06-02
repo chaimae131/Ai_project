@@ -175,6 +175,7 @@ class JobApplication(models.Model):
         ('pending', 'En attente'),
         ('reviewing', 'En cours d\'examen'),
         ('interview', 'Entretien'),
+        ('tinterview', 'Entretien technique'),
         ('accepted', 'Acceptée'),
         ('rejected', 'Rejetée'),
     )
