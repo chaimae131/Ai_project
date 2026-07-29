@@ -186,7 +186,7 @@ AI --> Matplotlib
 
 | Category                    | Technologies                                 |
 | --------------------------- | -------------------------------------------- |
-| **Frontend**                | React, Axios, Tailwind CSS                   |
+| **Frontend**                | html, Tailwind CSS                           |
 | **Backend**                 | Django, Django REST Framework                |
 | **Database**                | MySQL                                        |
 | **Authentication**          | JWT                                          |
@@ -327,14 +327,13 @@ Intelligent-Recruitment-App/
 
 # 🤝 Contributors
 
-This project was developed collaboratively by:
+This project was developed collaboratively by:      
 
-| Name              | Role                  | GitHub                                         |
-| ----------------- | --------------------- | ---------------------------------------------- |
-| **Your Name**     | Full-Stack Developer  | [@your-github](https://github.com/your-github) |
-| **Contributor 2** | Frontend Developer    | [@username](https://github.com/username)       |
-| **Contributor 3** | Backend Developer     | [@username](https://github.com/username)       |
-| **Contributor 4** | AI / Machine Learning | [@username](https://github.com/username)       |
+- BISSI Chaima
+- AMANSAG Hasnae
+- EL IDRISSI Hafssa
+- EL GHOZAIL Khadija
+- HOTANY Oumnia
 
 ---
 
@@ -350,16 +349,3 @@ This project was developed collaboratively by:
 * Resume parsing with OCR
 * Analytics dashboard enhancements
 
----
-
-# 📄 License
-
-This project is released under the **MIT License**.
-
----
-
-<div align="center">
-
-⭐ If you found this project useful, consider giving it a star on GitHub!
-
-</div>
