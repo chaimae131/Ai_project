@@ -6,7 +6,6 @@
 
 ![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge\&logo=django\&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge\&logo=react\&logoColor=61DAFB)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge\&logo=mysql\&logoColor=white)
 ![BERT](https://img.shields.io/badge/BERT-Cross--Encoder-blueviolet?style=for-the-badge)
 ![Whisper](https://img.shields.io/badge/OpenAI-Whisper-412991?style=for-the-badge\&logo=openai\&logoColor=white)
