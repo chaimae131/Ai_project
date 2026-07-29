@@ -13,7 +13,6 @@
 ![DeepFace](https://img.shields.io/badge/DeepFace-Facial%20Analysis-0096D6?style=for-the-badge)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-11557C?style=for-the-badge)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-black?style=for-the-badge\&logo=jsonwebtokens)
-![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
 **An intelligent recruitment platform that leverages Artificial Intelligence to automate candidate screening, evaluate CVs, and conduct asynchronous video interviews.**
 
