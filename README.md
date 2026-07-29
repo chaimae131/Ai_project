@@ -235,24 +235,6 @@ AI --> Matplotlib
 
 ---
 
-# 📸 Screenshots
-
-Add screenshots inside the **docs/** folder.
-
-```text
-docs/
-│
-├── login.png
-├── candidate-dashboard.png
-├── company-dashboard.png
-├── job-offers.png
-├── interview.png
-├── reports.png
-└── analytics.png
-```
-
----
-
 ---
 
 # 🤝 Contributors
